@@ -1,0 +1,45 @@
+:root {
+  --white: white;
+  --dark: #585858;
+  --darker: #3E3E3E;
+  --darkest: #242424;
+  --slate: SlateGray;
+  color-scheme: light dark;
+  color: var(--white);
+  background-color: var(--darkest);
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+  width: 100dvw;
+  min-height: 100dvh;
+  margin: 0;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100dvw;
+}
+
+button {
+  all: unset;
+  background-color: var(--darker);
+  text-align: center;
+}
+
+button:hover,
+button:active {
+  background-color: var(--dark);
+}
+
+h1 {
+  text-align: center;
+}
+
+input {
+  all: unset;
+  background-color: var(--darker);
+}

@@ -1,0 +1,13 @@
+{
+    "date": {
+        "day": 1,
+        "month": 1,
+        "year": 2024
+    },
+    "people": {
+        "seniors": 0,
+        "adults": 4,
+        "youths": 2,
+        "veterans": 2
+    }
+}

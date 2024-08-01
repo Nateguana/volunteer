@@ -1,0 +1,19 @@
+{
+    "name": {
+        "first": "Nate",
+        "last": "Westfall"
+    },
+    "dob": {
+        "day": 6,
+        "month": 8,
+        "year": 2002
+    },
+    "zip": 2748,
+    "people": {
+        "seniors": 0,
+        "adults": 4,
+        "youths": 0,
+        "veterans": 0
+    },
+    "test": 1
+}
