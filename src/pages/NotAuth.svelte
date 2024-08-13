@@ -25,7 +25,7 @@
         }
       })
       .then((json) => {
-        mode.change("admin_menu", json.name);
+        mode.change("admin_menu", { name: json.name });
       });
   }
   function tryEnter(e) {

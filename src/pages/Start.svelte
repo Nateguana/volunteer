@@ -15,12 +15,13 @@
             }
         })
         .then((json) => {
+            let name = { name: json.name };
             if (json.user_type === "admin") {
-                mode.change("admin_menu", json.name);
+                mode.change("admin_menu", name);
             } else if (json.user_type === "user") {
-                mode.change("search", json.name);
+                mode.change("search", name);
             } else {
-                mode.change("not_auth");
+                mode.change("not_auth", name);
             }
         })
         .catch((err) => {

@@ -11,6 +11,8 @@ const
     app = express(),
     port = 3000;
 
+console.log("Starting");
+
 // db client
 async function getDB() {
     const dbString = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_CLIENT}@cluster.vvdqqog.mongodb.net/?retryWrites=true&w=majority&appName=Cluster`;
@@ -137,7 +139,23 @@ app.post("/downgrade", async (req, res) => {
 })
 
 const MAX_PEOPLE_RETURN = 50;
-const PROJECT_AND_SORT = { 'name.first': 1, 'name.last': 1, 'dob.year': 1 };
+const SEARCH_PIPELINE = [
+    { $limit: 20 },
+    {
+        $project: {
+            "id": "$_id",
+            "first": "$name.first",
+            "last": "$name.last",
+            "dob": 1,
+            "zip": 1,
+            "last_seen": {
+                $ifNull: ['$last_seen', { $literal: 0 }],
+            },
+            "_id": 0
+        }
+    },
+    { $sort: { 'first': 1, 'last': 1, 'dob.year': 1 } }];
+
 app.post("/search", async (req, res) => {
     // not auth
     if (!req.user.exists) {
@@ -159,36 +177,57 @@ app.post("/search", async (req, res) => {
     //first name
     let name = json.first;
     if (name && name.length > 0) {
-        // regular search
+        let start = "";
         if (name[0] == name[0].toUpperCase()) {
-
-            query['name.first'] = { $regex: "^" + name.toLowerCase() };
-        } else {
-            query['name.first'] = { $regex: name.toLowerCase() };
+            start = "^";
         }
+        query['name.first'] = { $regex: start + name.toLowerCase() };
     }
 
     //last name
     name = json.last;
     if (name && name.length > 0) {
-        // regular search
+        let start = "";
         if (name[0] == name[0].toUpperCase()) {
-            query['name.last'] = name.toLowerCase();
-        } else {
-            query['name.last'] = { $regex: name.toLowerCase() };
+            start = "^";
         }
+        query['name.last'] = { $regex: start + name.toLowerCase() };
     }
 
-    let cursor = DB.people().find(query, PROJECT_AND_SORT).limit(MAX_PEOPLE_RETURN).sort(PROJECT_AND_SORT);
+    let pipeline = [{ $match: query }, ...SEARCH_PIPELINE]
+
+    let cursor = DB.people().aggregate(pipeline);
     let data = await cursor.toArray()
     res.writeHead(200, "OK", { "Content-Type": "application/json" });
     res.end(JSON.stringify(data));
+})
+
+app.post("/input", async (req, res) => {
+    // not admin
+    if (!req.user.admin) {
+        res.status(401);
+        res.end();
+        // did not give id
+    } else if (!req.body.id) {
+        res.status(400);
+        res.end();
+    } else {
+
+    }
+});
+
+app.post("/signout", (req, res) => {
+    console.log("user signed out");
+    res.cookie("token", null);
+    res.end();
 })
 
 app.get("/test", (req, res) => {
     console.log("test was hit");
     res.end();
 })
+
+
 
 app.post("/test", (req, res) => {
     console.log(`test post was hit with ${JSON.stringify(req.body)}`);

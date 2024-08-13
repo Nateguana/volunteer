@@ -1,12 +1,32 @@
 <script>
     export let mode;
-    export let signOut;
     export let center = false;
+
+    let signout_counter = 0;
+
+    function mousedown() {
+        signout_counter += 1;
+        setTimeout(() => {
+            trySignOut(signout_counter);
+        }, 3000);
+    }
+    function mouseup() {
+        // invalidate number
+        signout_counter += 1;
+    }
+    function trySignOut(num) {
+        if (signout_counter == num) {
+            //mode.change("signout");
+            console.log("signout activated")
+        }
+    }
 </script>
 
 <header class="full-width header">
     <span class="width"
-        ><button on:click={signOut} class="button">Sign Out</button></span
+        ><button on:mousedown={mousedown} on:mouseup={mouseup} class="button"
+            >Sign Out</button
+        ></span
     >
     <span>{mode.name}</span>
 </header>
